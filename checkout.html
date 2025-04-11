@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - to Kikit Coin PreSale </title>
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="./style.css">
+    <script src="auth.js"></script> <!-- Secure page -->
+
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <header class="header" data-header>
+    <div class="container">
+
+      <a href="#" class="logo">
+        <img src="./logo.svg" width="32" height="32" alt="Cryptex logo">
+        Kikit
+      </a>
+
+       <nav class="navbar" data-navbar>
+        <ul class="navbar-list">
+          <li class="navbar-item">
+            <a href="index.html" class="navbar-link">Homepage</a>
+          </li>
+          <li class="navbar-item">
+            <a href="login.html" class="navbar-link">Buy Kikit</a>
+          </li>
+          <li class="navbar-item">
+            <a href="about.html" class="navbar-link ">About Us</a>
+          </li>
+          <li class="navbar-item">
+            <a href="pyusdt.html" class="navbar-link">PYUSDT</a>
+          </li>
+        </ul>
+      </nav>
+
+      <button class="nav-toggle-btn" aria-label="Toggle menu" data-nav-toggler>
+        <span class="line line-1"></span>
+        <span class="line line-2"></span>
+        <span class="line line-3"></span>
+      </button>
+
+      <button id="signoutBtn" class="btn-primary" style="margin-left: auto;">Sign Out</button>
+
+    </div>
+  </header>
+   
+   
+    <script src="https://www.paypal.com/sdk/js?client-id=ASTHwJ4Z2ES0Lt6v0EJOsmTo7LCl3blbgr9yQFQjL6ot_bdpPQZFjcGpas5EEpQHawRxjOcC6f-6S3jc&currency=USD"></script>
+</head>
+<body>
+
+  <div class="checkout-wrapper">
+    <div class="checkout-card">
+      <h1 class="title">Checkout</h1>
+
+      <form id="checkout-form">
+        <input type="number" id="amount" placeholder="Enter amount (min $20)" required min="20" />
+        <button type="submit" class="btn-primary">Proceed to Payment</button>
+      </form>
+
+      <div id="paypal-button-container" class="paypal-buttons" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('checkout-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const amount = parseFloat(document.getElementById('amount').value);
+
+      if (amount < 20) {
+        alert("Minimum amount is $20.");
+        return;
+      }
+
+      const container = document.getElementById('paypal-button-container');
+      container.innerHTML = ''; // Clear previous PayPal buttons
+      container.style.display = 'block';
+
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{ amount: { value: amount.toFixed(2) } }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            const purchase = {
+              date: new Date().toLocaleString(),
+              quantity: (amount / 0.002).toFixed(0),
+              amount: amount.toFixed(2)
+            };
+
+            let history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+            history.push(purchase);
+            localStorage.setItem('purchaseHistory', JSON.stringify(history));
+
+            // Show custom success message
+            const successDiv = document.createElement("div");
+            successDiv.innerHTML = `
+              <div style="
+                background-color: #1e293b;
+                color: #fff;
+                font-size: 20px;
+                padding: 20px;
+                margin-top: 20px;
+                border-radius: 12px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+              ">
+                ✅ Payment successful! Redirecting to history...
+              </div>
+            `;
+            document.querySelector(".checkout-card").appendChild(successDiv);
+
+            setTimeout(() => {
+              window.location.href = "history.html";
+            }, 2000);
+          });
+        }
+      }).render('#paypal-button-container');
+    });
+  </script>
+
+
+
+
+
+
+  <main>
+    <article>
+
+      
+
+  <!-- 
+    - custom js link
+  -->
+  <script src="./script.js" defer></script>
+
+  <!-- 
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
